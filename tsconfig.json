@@ -1,0 +1,38 @@
+{
+    "exclude": [
+        "node_modules"
+    ],
+    "compilerOptions": {
+        "lib": [
+            "dom",
+            "es2020"
+        ],
+        "paths": {
+            "*": [
+                "src/types/*"
+            ],
+            "@shared/*": [
+                "src/shared/*"
+            ],
+            "@test/*": [
+                "src/test/*"
+            ]
+        },
+        "module": "commonjs",
+        "outDir": "lib",
+        "strict": true,
+        "target": "es2019",
+        "noUnusedLocals": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "strictNullChecks": true,
+        "resolveJsonModule": false,
+        "inlineSourceMap": true,
+    },
+    "include": [
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "integration-test/**/*.ts",
+        "migrations/*.ts"
+    ]
+}
