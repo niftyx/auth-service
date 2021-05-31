@@ -1,4 +1,5 @@
-import { Request } from "express";
+import { FastifyRequest } from "fastify";
+import "jose/types";
 
 export interface HttpServiceConfig {
   httpPort: number;
@@ -55,7 +56,6 @@ export interface Session {
   jwt_token: string | null;
   jwt_expires_in: number | null;
   refresh_token?: string;
-  user: UserData;
 }
 
 export interface UserData {
@@ -84,7 +84,13 @@ export interface AccountData {
 }
 
 export interface QueryAccountData {
-  auth_accounts: AccountData[];
+  users: AccountData[];
+}
+
+export interface InsertAccountData {
+  insert_users: {
+    returning: AccountData[];
+  };
 }
 
 export interface UpdateAccountData {
@@ -101,7 +107,7 @@ export interface RefreshTokenMiddleware {
   type: "query" | "cookie" | null;
 }
 
-export interface RequestExtended extends Request {
+export interface RequestExtended extends FastifyRequest {
   refresh_token?: RefreshTokenMiddleware;
   permission_variables?: PermissionVariables;
 }

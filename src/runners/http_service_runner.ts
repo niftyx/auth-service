@@ -1,3 +1,4 @@
+import { doMigrations } from "../shared/migration";
 import { FastifyInstance } from "fastify";
 import { Server } from "http";
 
@@ -31,6 +32,8 @@ export async function runHttpServiceAsync(
   config: HttpServiceConfig,
   app: FastifyInstance
 ): Promise<void> {
+  await doMigrations();
+
   createDefaultServer(dependencies, config, app);
 
   app.setErrorHandler(errors as any);

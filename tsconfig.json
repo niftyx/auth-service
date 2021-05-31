@@ -7,17 +7,6 @@
             "dom",
             "es2020"
         ],
-        "paths": {
-            "*": [
-                "src/types/*"
-            ],
-            "@shared/*": [
-                "src/shared/*"
-            ],
-            "@test/*": [
-                "src/test/*"
-            ]
-        },
         "module": "commonjs",
         "outDir": "lib",
         "strict": true,
@@ -27,7 +16,7 @@
         "moduleResolution": "node",
         "strictNullChecks": true,
         "resolveJsonModule": false,
-        "inlineSourceMap": true,
+        "inlineSourceMap": true
     },
     "include": [
         "src/**/*.ts",

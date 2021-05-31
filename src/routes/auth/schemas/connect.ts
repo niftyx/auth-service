@@ -3,7 +3,13 @@ import { headers, errorSchemas } from "../../../shared/schema";
 const connectResponseSchema = {
   type: "object",
   properties: {
-    address: {
+    jwt_token: {
+      type: "string",
+    },
+    jwt_expires_in: {
+      type: "number",
+    },
+    refresh_token: {
       type: "string",
     },
   },
@@ -16,10 +22,10 @@ const connectRequestSchema = {
   headers,
   body: {
     type: "object",
-    required: ["address", "message"],
+    required: ["message", "signedMessage"],
     properties: {
-      address: { type: "string" },
       message: { type: "string" },
+      signedMessage: { type: "string" },
     },
   },
 };

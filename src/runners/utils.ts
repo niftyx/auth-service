@@ -1,12 +1,13 @@
 import { FastifyInstance } from "fastify";
 import cors from "fastify-cors";
 import fastifyFormBody from "fastify-formbody";
-
+import cookie from "fastify-cookie";
 import { AppDependencies } from "../app";
 import { logger } from "../logger";
 import { HttpServiceConfig } from "../types";
 
 import routes from "../routes";
+import { COOKIES } from "../shared/config";
 
 /**
  * creates the NodeJS http server with graceful shutdowns, healthchecks,
@@ -32,6 +33,9 @@ export function createDefaultServer(
     }
   );
   app.register(fastifyFormBody);
+  app.register(cookie, {
+    secret: COOKIES.SECRET,
+  });
   app.register(routes);
 
   app.server.on("close", () => {

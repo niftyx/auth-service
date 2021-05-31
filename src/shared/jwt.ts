@@ -1,7 +1,6 @@
 import { JWT as CONFIG_JWT, REGISTRATION } from "./config/authentication";
-import { JWK, JWKS, JWT } from "jose";
 
-import kebabCase from "lodash.kebabcase";
+import { JWK, JWKS, JWT } from "jose";
 
 import { Claims, Token, AccountData, ClaimValueType } from "../types";
 
@@ -23,6 +22,7 @@ if (RSA_TYPES.includes(CONFIG_JWT.ALGORITHM)) {
       jwtKey = JWK.asKey(jwtKey, { alg: CONFIG_JWT.ALGORITHM });
       jwtKey.toPEM(true);
     } catch (error) {
+      ``;
       throw new Error(
         "Invalid RSA private key in the JWT_KEY environment variable."
       );
@@ -39,58 +39,27 @@ if (RSA_TYPES.includes(CONFIG_JWT.ALGORITHM)) {
 export const newJwtExpiry = CONFIG_JWT.EXPIRES_IN * 60 * 1000;
 
 /**
- * Convert array to Postgres array
- * @param arr js array to be converted to Postgres array
- */
-function toPgArray(arr: string[]): string {
-  const m = arr.map((e) => `"${e}"`).join(",");
-  return `{${m}}`;
-}
-
-/**
  * Create an object that contains all the permission variables of the user,
  * i.e. user-id, allowed-roles, default-role and the kebab-cased columns
  * of the public.tables columns defined in JWT_CUSTOM_FIELDS
  * @param jwt if true, add a 'x-hasura-' prefix to the property names, and stringifies the values (required by Hasura)
  */
 export function generatePermissionVariables(
-  { default_role, account_roles = [], user }: AccountData,
+  accountData: AccountData,
   jwt = false
 ): { [key: string]: ClaimValueType } {
   const prefix = jwt ? "x-hasura-" : "";
-  const role = user.is_anonymous
-    ? REGISTRATION.DEFAULT_ANONYMOUS_ROLE
-    : default_role || REGISTRATION.DEFAULT_USER_ROLE;
-  const accountRoles = account_roles.map(({ role: roleName }) => roleName);
+  const role = REGISTRATION.DEFAULT_USER_ROLE;
+  const accountRoles = REGISTRATION.DEFAULT_ALLOWED_USER_ROLES;
 
   if (!accountRoles.includes(role)) {
     accountRoles.push(role);
   }
 
   return {
-    [`${prefix}user-id`]: user.id,
+    [`${prefix}user-id`]: accountData.id,
     [`${prefix}allowed-roles`]: accountRoles,
     [`${prefix}default-role`]: role,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...CONFIG_JWT.CUSTOM_FIELDS.reduce<{ [key: string]: ClaimValueType }>(
-      (aggr: any, cursor) => {
-        const type = typeof user[cursor] as ClaimValueType;
-
-        let value;
-        if (type === "string") {
-          value = user[cursor];
-        } else if (Array.isArray(user[cursor])) {
-          value = toPgArray(user[cursor] as string[]);
-        } else {
-          value = JSON.stringify(user[cursor] ?? null);
-        }
-
-        aggr[`${prefix}${kebabCase(cursor)}`] = value;
-
-        return aggr;
-      },
-      {}
-    ),
   };
 }
 
@@ -114,8 +83,8 @@ export const sign = (payload: object, accountData: AccountData): string =>
   JWT.sign(payload, jwtKey, {
     algorithm: CONFIG_JWT.ALGORITHM,
     expiresIn: `${CONFIG_JWT.EXPIRES_IN}m`,
-    subject: accountData.user.id,
-    issuer: "nhost",
+    subject: accountData.id,
+    issuer: "gswap-auth-service",
   });
 
 /**

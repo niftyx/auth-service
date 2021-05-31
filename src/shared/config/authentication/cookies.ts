@@ -1,4 +1,4 @@
-import { COOKIE_SECRET_KEY } from ".";
+import { COOKIE_SECRET_KEY } from "../../../config";
 
 export const COOKIES = {
   get SECRET() {

@@ -1,15 +1,15 @@
 import { COOKIES, JWT } from "./config/authentication";
 
-import { Response } from "express";
 import { insertRefreshToken } from "./queries";
 import { request } from "./request";
 import { v4 as uuidv4 } from "uuid";
 import { AccountData } from "./../types";
 import { generatePermissionVariables } from "./jwt";
+import { FastifyReply } from "fastify";
 
 interface InsertRefreshTokenData {
-  insert_auth_refresh_tokens_one: {
-    account: AccountData;
+  insert_refresh_tokens_one: {
+    user: AccountData;
   };
 }
 
@@ -29,7 +29,7 @@ export function newRefreshExpiry(): number {
  * @param refresh_token Refresh token to be set
  */
 export const setCookie = (
-  res: Response,
+  res: FastifyReply,
   refresh_token: string,
   permission_variables: string
 ): void => {
@@ -37,7 +37,7 @@ export const setCookie = (
   const maxAge = JWT.REFRESH_EXPIRES_IN * 60 * 1000;
 
   // set refresh token as cookie
-  res.cookie("refresh_token", refresh_token, {
+  res.setCookie("refresh_token", refresh_token, {
     httpOnly: true,
     maxAge,
     signed: Boolean(COOKIES.SECRET),
@@ -46,7 +46,7 @@ export const setCookie = (
   });
 
   // set permission variables cookie
-  res.cookie("permission_variables", permission_variables, {
+  res.setCookie("permission_variables", permission_variables, {
     httpOnly: true,
     maxAge,
     signed: Boolean(COOKIES.SECRET),
@@ -63,7 +63,7 @@ export const setCookie = (
  * @param refresh_token (optional) Refresh token to be set
  */
 export const setRefreshToken = async (
-  res: Response,
+  res: FastifyReply,
   accountId: string,
   useCookie = false,
   refresh_token?: string
@@ -74,14 +74,14 @@ export const setRefreshToken = async (
 
   const insert_account_data = (await request(insertRefreshToken, {
     refresh_token_data: {
-      account_id: accountId,
+      user_id: accountId,
       refresh_token,
       expires_at: new Date(newRefreshExpiry()),
     },
   })) as InsertRefreshTokenData;
 
   if (useCookie) {
-    const { account } = insert_account_data.insert_auth_refresh_tokens_one;
+    const { user: account } = insert_account_data.insert_refresh_tokens_one;
     const permission_variables = JSON.stringify(
       generatePermissionVariables(account)
     );
