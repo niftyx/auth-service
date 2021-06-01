@@ -15,15 +15,20 @@ export const handler = async function handler(
   const { body } = req;
   const { message, signedMessage } = body as any;
 
-  const msgHash = utils.hashMessage(message);
-  const msgHashBytes = utils.arrayify(msgHash);
+  let signer = "";
 
-  const signer = utils.recoverAddress(msgHashBytes, signedMessage);
-  const accountId = signer.toLowerCase();
-
-  if (!accountId) {
-    return reply.code(401).send();
+  try {
+    const msgHash = utils.hashMessage(message);
+    const msgHashBytes = utils.arrayify(msgHash);
+    signer = utils.recoverAddress(msgHashBytes, signedMessage);
+  } catch (err) {
+    const error = new Error() as any;
+    error.statusCode = 401;
+    error.message = err.message;
+    throw error;
   }
+
+  const accountId = signer.toLowerCase();
 
   let accountData = await selectAccountById(accountId);
   if (!accountData) {

@@ -5,7 +5,7 @@ const index = async (app: FastifyInstance) => {
     method: "GET",
     url: "/",
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
-      reply.code(200).send("Root of Auth Service");
+      reply.code(200).send("OK");
     },
   });
 };

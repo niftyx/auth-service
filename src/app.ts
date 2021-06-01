@@ -12,29 +12,16 @@ export const logger = pino({
   timestamp: LOGGER_INCLUDE_TIMESTAMP,
 });
 
-export interface AppDependencies {}
-
 /**
- * Instantiates dependencies required to run the app. Uses default settings based on config
- */
-export async function getDefaultAppDependenciesAsync(
-  _config: HttpServiceConfig
-): Promise<AppDependencies> {
-  return {};
-}
-/**
- * starts the app with dependencies injected.
  * @return the app object
  */
 export async function getAppAsync(
-  dependencies: AppDependencies,
   config: HttpServiceConfig
 ): Promise<{ app: FastifyInstance }> {
   const app = fastify({
     keepAliveTimeout: config.httpKeepAliveTimeout,
     logger,
   });
-  await runHttpServiceAsync(dependencies, config, app);
-
+  await runHttpServiceAsync(config, app);
   return { app };
 }
