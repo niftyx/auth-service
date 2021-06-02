@@ -9,7 +9,6 @@ import {
   RequestExtended,
 } from "./types";
 
-// TODO await request returns undefined if no user found!
 export const selectAccountById = async (
   id: string | undefined
 ): Promise<AccountData | null> => {

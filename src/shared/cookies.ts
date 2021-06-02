@@ -25,7 +25,7 @@ export function newRefreshExpiry(): number {
 
 /**
  * Set refresh token as a cookie
- * @param res Express Response
+ * @param res Fastify Reply
  * @param refresh_token Refresh token to be set
  */
 export const setCookie = (
@@ -57,7 +57,7 @@ export const setCookie = (
 
 /**
  * Insert new refresh token in database and maybe set new refresh token as cookie.
- * @param res Express Response
+ * @param res Fastify Reply
  * @param accountId Account ID
  * @param useCookie (optional) if the cookie should be set or not
  * @param refresh_token (optional) Refresh token to be set

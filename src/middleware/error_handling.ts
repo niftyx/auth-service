@@ -12,10 +12,6 @@ interface Error {
   ];
 }
 
-/**
- * This is a custom error middleware for Express.
- * https://expressjs.com/en/guide/error-handling.html
- */
 export function errors(err: Error, req: FastifyRequest, res: FastifyReply) {
   const code = err?.output?.statusCode || 400;
 

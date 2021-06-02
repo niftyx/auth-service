@@ -7,16 +7,10 @@ import {
 import { HttpServiceConfig } from "./types";
 
 enum EnvVarType {
-  AddressList,
-  StringList,
   Integer,
   Port,
-  KeepAliveTimeout,
   ChainId,
-  ETHAddressHex,
-  UnitAmount,
-  Url,
-  UrlList,
+  KeepAliveTimeout,
   Boolean,
   NonEmptyString,
 }
