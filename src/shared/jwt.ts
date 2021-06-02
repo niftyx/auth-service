@@ -2,7 +2,7 @@ import { JWT as CONFIG_JWT, REGISTRATION } from "./config/authentication";
 
 import { JWK, JWKS, JWT } from "jose";
 
-import { Claims, Token, AccountData, ClaimValueType } from "../types";
+import { Claims, Token, AccountData, ClaimValueType } from "./types";
 
 const RSA_TYPES = ["RS256", "RS384", "RS512"];
 const SHA_TYPES = ["HS256", "HS384", "HS512"];

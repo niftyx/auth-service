@@ -3,7 +3,7 @@ import { COOKIES, JWT } from "./config/authentication";
 import { insertRefreshToken } from "./queries";
 import { request } from "./request";
 import { v4 as uuidv4 } from "uuid";
-import { AccountData } from "./../types";
+import { AccountData } from "./types";
 import { generatePermissionVariables } from "./jwt";
 import { FastifyReply } from "fastify";
 

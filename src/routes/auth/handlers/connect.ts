@@ -1,4 +1,4 @@
-import { InsertAccountData, Session } from "./../../../types/index.d";
+import { InsertAccountData, Session } from "./../../../shared/types";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { utils } from "ethers";
 import { request } from "../../../shared/request";

@@ -7,7 +7,7 @@ import {
   QueryAccountData,
   PermissionVariables,
   RequestExtended,
-} from "./../types";
+} from "./types";
 
 // TODO await request returns undefined if no user found!
 export const selectAccountById = async (
