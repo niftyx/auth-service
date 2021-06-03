@@ -13,6 +13,7 @@ export const doMigrations = async () => {
   try {
     await client.connect();
     await migrate({ client }, "./migrations");
+    logger.info("===Migration is done successfully!===");
   } catch (e) {
     console.error(e);
     logger.error(`Error attempting to migrate, [${JSON.stringify(e)}]`);

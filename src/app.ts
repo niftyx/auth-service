@@ -9,6 +9,7 @@ import { APPLICATION, COOKIES } from "./shared/config";
 import { errors } from "./middleware/error_handling";
 import { HttpServiceConfig } from "./types";
 import { logger } from "./logger";
+import { MODE } from "./config";
 
 process.on("uncaughtException", (err) => {
   logger.error(err);
@@ -34,7 +35,21 @@ export async function getAppAsync(
     logger,
   });
 
-  app.register(cors, {});
+  app.register(cors, {
+    origin: (origin, cb) => {
+      if (MODE === "production") {
+        // PRODUCTION
+        if (/localhost/.test(origin)) {
+          // REJECT REQUESTS FROM LOCALHOST
+          cb(new Error("Not allowed"), false);
+          return;
+        }
+      }
+
+      cb(null, true);
+    },
+  });
+
   app.addContentTypeParser(
     "application/json",
     { parseAs: "string" },
@@ -48,19 +63,24 @@ export async function getAppAsync(
       }
     }
   );
+
   app.register(fastifyFormBody);
+
   app.register(cookie, {
     secret: COOKIES.SECRET,
   });
+
   app.register(require("fastify-rate-limit"), {
     max: APPLICATION.MAX_REQUESTS,
     timeWindow: APPLICATION.TIME_FRAME,
     addHeaders: true,
     skipOnError: ({ path }: any) => {
+      // disable rateLimit for health check
       if (path === "/") return true;
       return false;
     },
   });
+
   app.register(routes);
 
   app.server.on("close", () => {

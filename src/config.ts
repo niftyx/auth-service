@@ -94,6 +94,8 @@ export const POSTGRES_URI = _.isEmpty(process.env.POSTGRES_URI)
   ? DEFAULT_LOCAL_POSTGRES_URI
   : process.env.POSTGRES_URI;
 
+export const MODE = (process.env.MODE || "development").toLowerCase();
+
 // Should the logger include time field in the output logs, defaults to true.
 export const LOGGER_INCLUDE_TIMESTAMP = _.isEmpty(
   process.env.LOGGER_INCLUDE_TIMESTAMP
