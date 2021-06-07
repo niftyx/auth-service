@@ -1,20 +1,16 @@
-import { InsertAccountData, Session } from "./../../../shared/types";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { InsertAccountData, Session } from "./../../shared/types";
 import { utils } from "ethers";
-import { request } from "../../../shared/request";
-import { insertAccount } from "../../../shared/queries";
-import { setRefreshToken } from "../../../shared/cookies";
-import { createHasuraJwt } from "../../../shared/jwt";
-import { newJwtExpiry } from "../../../shared/jwt";
-import { selectAccountById } from "../../../shared/helpers";
+import { request } from "../../shared/request";
+import { insertAccount } from "../../shared/queries";
+import { setRefreshToken } from "../../shared/cookies";
+import { createHasuraJwt } from "../../shared/jwt";
+import { newJwtExpiry } from "../../shared/jwt";
+import { selectAccountById } from "../../shared/helpers";
 
 export const handler = async function handler(
-  req: FastifyRequest,
-  reply: FastifyReply
+  message: string,
+  signedMessage: string
 ) {
-  const { body } = req;
-  const { message, signedMessage } = body as any;
-
   let signer = "";
 
   try {
@@ -58,7 +54,7 @@ export const handler = async function handler(
   }
 
   // refresh_token
-  const refresh_token = await setRefreshToken(reply, accountData.id, false);
+  const refresh_token = await setRefreshToken(accountData.id);
 
   // generate jwt
   const jwt_token = createHasuraJwt(accountData);

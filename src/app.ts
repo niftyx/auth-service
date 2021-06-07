@@ -1,14 +1,14 @@
 import fastify, { FastifyInstance } from "fastify";
 import cors from "fastify-cors";
-import fastifyFormBody from "fastify-formbody";
-import cookie from "fastify-cookie";
 
+import { APPLICATION } from "./shared/config";
 import { doMigrations } from "./shared/migration";
-import routes from "./routes";
-import { APPLICATION, COOKIES } from "./shared/config";
+
 import { errors } from "./middleware/error_handling";
 import { HttpServiceConfig } from "./types";
 import { logger } from "./logger";
+import apollo from "./apollo";
+import mercurius from "mercurius";
 import { MODE } from "./config";
 
 process.on("uncaughtException", (err) => {
@@ -31,7 +31,6 @@ export async function getAppAsync(
   await doMigrations();
 
   const app = fastify({
-    keepAliveTimeout: config.httpKeepAliveTimeout,
     logger,
   });
 
@@ -50,26 +49,6 @@ export async function getAppAsync(
     },
   });
 
-  app.addContentTypeParser(
-    "application/json",
-    { parseAs: "string" },
-    function (req, body, done) {
-      try {
-        var json = JSON.parse(body as any);
-        done(null, json);
-      } catch (err) {
-        err.statusCode = 400;
-        done(err, undefined);
-      }
-    }
-  );
-
-  app.register(fastifyFormBody);
-
-  app.register(cookie, {
-    secret: COOKIES.SECRET,
-  });
-
   app.register(require("fastify-rate-limit"), {
     max: APPLICATION.MAX_REQUESTS,
     timeWindow: APPLICATION.TIME_FRAME,
@@ -81,7 +60,7 @@ export async function getAppAsync(
     },
   });
 
-  app.register(routes);
+  app.register(mercurius, { ...apollo, graphiql: "playground" });
 
   app.server.on("close", () => {
     logger.info("http server shutdown");

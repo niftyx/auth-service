@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyRequest } from "fastify";
 
 interface Error {
   output?: {
@@ -12,7 +12,7 @@ interface Error {
   ];
 }
 
-export function errors(err: Error, req: FastifyRequest, res: FastifyReply) {
+export function errors(err: Error, req: FastifyRequest, res: any) {
   const code = err?.output?.statusCode || 400;
 
   // log error

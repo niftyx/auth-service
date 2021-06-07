@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     "update_time_stamp" integer NOT NULL,
     PRIMARY KEY ("id")
 );
+CREATE INDEX IF NOT EXISTS "users_custom_url_idx" ON "users"("custom_url");
 CREATE TABLE IF NOT EXISTS public.refresh_tokens (
     refresh_token character varying NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
