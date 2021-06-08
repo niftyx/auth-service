@@ -46,12 +46,9 @@ export const selectAccountByUserId = gql`
 export const insertRefreshToken = gql`
   mutation ($refresh_token_data: refresh_tokens_insert_input!) {
     insert_refresh_tokens_one(object: $refresh_token_data) {
-      user {
-        ...userFragment
-      }
+      refresh_token
     }
   }
-  ${userFragment}
 `;
 
 export const selectRefreshToken = gql`
@@ -64,12 +61,9 @@ export const selectRefreshToken = gql`
         ]
       }
     ) {
-      account {
-        ...userFragment
-      }
+      refresh_token
     }
   }
-  ${userFragment}
 `;
 
 export const accountOfRefreshToken = gql`
