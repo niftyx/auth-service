@@ -2,7 +2,6 @@ import fastify, { FastifyInstance } from "fastify";
 import cors from "fastify-cors";
 
 import { APPLICATION } from "./shared/config";
-import { doMigrations } from "./shared/migration";
 
 import { errors } from "./middleware/error_handling";
 import { HttpServiceConfig } from "./types";
@@ -28,7 +27,7 @@ process.on("unhandledRejection", (err) => {
 export async function getAppAsync(
   config: HttpServiceConfig
 ): Promise<{ app: FastifyInstance }> {
-  await doMigrations();
+  // await doMigrations();
 
   const app = fastify({
     logger,

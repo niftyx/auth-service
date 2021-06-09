@@ -2,7 +2,6 @@ import { InsertAccountData, Session } from "./../../shared/types";
 import { utils } from "ethers";
 import { request } from "../../shared/request";
 import { insertAccount } from "../../shared/queries";
-import { setRefreshToken } from "../../shared/cookies";
 import { createHasuraJwt } from "../../shared/jwt";
 import { newJwtExpiry } from "../../shared/jwt";
 import { selectAccountById } from "../../shared/helpers";
@@ -54,7 +53,6 @@ export const handler = async function handler(
   }
 
   // refresh_token
-  const refresh_token = await setRefreshToken(accountData.id);
 
   // generate jwt
   const jwt_token = createHasuraJwt(accountData);
@@ -62,7 +60,6 @@ export const handler = async function handler(
   const session: Session = {
     jwt_token,
     jwt_expires_in,
-    refresh_token,
   };
 
   return session;
