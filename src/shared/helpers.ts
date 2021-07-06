@@ -1,13 +1,7 @@
-import { COOKIES } from "./config/authentication";
 import { selectAccountByUserId as selectAccountByUserIdQuery } from "./queries";
 
 import { request } from "./request";
-import {
-  AccountData,
-  QueryAccountData,
-  PermissionVariables,
-  RequestExtended,
-} from "./types";
+import { AccountData, QueryAccountData } from "./types";
 
 export const selectAccountById = async (
   id: string | undefined
@@ -21,14 +15,4 @@ export const selectAccountById = async (
   );
   if (!hasuraData.users[0]) return null;
   return hasuraData.users[0];
-};
-
-export const getPermissionVariablesFromCookie = (
-  req: RequestExtended
-): PermissionVariables => {
-  const { permission_variables } = COOKIES.SECRET
-    ? (req as any).signedCookies
-    : (req as any).cookies;
-  if (!permission_variables) throw new Error("No permission variables");
-  return JSON.parse(permission_variables);
 };

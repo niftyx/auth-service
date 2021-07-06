@@ -69,8 +69,6 @@ export const HASURA_ENDPOINT: string = process.env.HASURA_ENDPOINT || "";
 export const HASURA_GRAPHQL_ADMIN_SECRET: string =
   process.env.HASURA_GRAPHQL_ADMIN_SECRET || "";
 
-export const COOKIE_SECRET_KEY: string = process.env.COOKIE_SECRET || "";
-
 export const JWT_SECRET_KEY: string = process.env.JWT_SECRET || "aa";
 export const JWT_ALGORITHM: string = process.env.JWT_ALGORITHM || "HS256";
 export const JWT_CLAIMS_NAMESPACE: string =
