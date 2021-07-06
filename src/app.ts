@@ -9,6 +9,7 @@ import { logger } from "./logger";
 import apollo from "./apollo";
 import mercurius from "mercurius";
 import { MODE } from "./config";
+import { doMigrations } from "./shared/migration";
 
 process.on("uncaughtException", (err) => {
   logger.error(err);
@@ -27,7 +28,7 @@ process.on("unhandledRejection", (err) => {
 export async function getAppAsync(
   config: HttpServiceConfig
 ): Promise<{ app: FastifyInstance }> {
-  // await doMigrations();
+  await doMigrations();
 
   const app = fastify({
     logger,
