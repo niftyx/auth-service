@@ -94,7 +94,7 @@ export async function getAppAsync(
   process.on("SIGTERM", shutdownFunc);
   process.on("SIGQUIT", shutdownFunc);
 
-  app.listen(config.httpPort);
+  app.listen(config.httpPort, "0.0.0.0");
 
   return { app };
 }
